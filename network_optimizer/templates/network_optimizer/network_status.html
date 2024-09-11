@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Network Status</title>
+    
+    <style>
+        /* Inline CSS for demonstration; ideally, this would go in styles.css */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            margin: 0;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #fff;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        li ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        li ul li {
+            background: #e4e4e4;
+            padding: 10px;
+            border-radius: 3px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .status-message {
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Network Status</h1>
+        <p class="status-message">Connected to WebSocket: <span id="connection-status">Connecting...</span></p>
+        <ul id="paths-list">
+            <!-- Initial static data could be rendered server-side here -->
+            {% for path in paths %}
+                <li id="path-{{ path.id }}">
+                    <strong>Path ID:</strong> {{ path.id }}<br>
+                    <strong>Source:</strong> {{ path.source }}<br>
+                    <strong>Destination:</strong> {{ path.destination }}<br>
+                    <strong>Wavelength:</strong> {{ path.wavelength }}<br>
+                    <strong>Latency:</strong> {{ path.latency }} ms<br>
+                    <strong>Links:</strong>
+                    <ul>
+                        {% for link in path.links.all %}
+                            <li id="link-{{ link.id }}">
+                                <strong>Link ID:</strong> {{ link.id }}<br>
+                                <strong>Distance:</strong> {{ link.distance }}<br>
+                                <strong>Capacity:</strong> {{ link.capacity }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        // WebSocket setup
+        const socket = new WebSocket('ws://127.0.0.1:8000/ws/network-status/');
+
+        // Update connection status message
+        socket.onopen = function() {
+            document.getElementById('connection-status').textContent = 'Connected';
+        };
+
+        socket.onclose = function() {
+            document.getElementById('connection-status').textContent = 'Disconnected';
+            console.error('WebSocket closed unexpectedly');
+        };
+
+        socket.onerror = function(e) {
+            document.getElementById('connection-status').textContent = 'Error';
+            console.error('WebSocket error:', e);
+        };
+
+        socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            console.log(data.message);
+            updateUI(data.message);
+        };
+
+        function updateUI(message) {
+            const pathsList = document.getElementById('paths-list');
+
+            // Clear existing list
+            pathsList.innerHTML = '';
+
+            message.paths.forEach(path => {
+                // Create a new list item for each path
+                const pathElement = document.createElement('li');
+                pathElement.id = `path-${path.id}`;
+                pathElement.innerHTML = `
+                    <strong>Path ID:</strong> ${path.id}<br>
+                    <strong>Source:</strong> ${path.source}<br>
+                    <strong>Destination:</strong> ${path.destination}<br>
+                    <strong>Wavelength:</strong> ${path.wavelength}<br>
+                    <strong>Latency:</strong> ${path.latency} ms<br>
+                    <strong>Links:</strong>
+                    <ul>
+                        ${path.links.map(link => `
+                            <li id="link-${link.id}">
+                                <strong>Link ID:</strong> ${link.id}<br>
+                                <strong>Distance:</strong> ${link.distance}<br>
+                                <strong>Capacity:</strong> ${link.capacity}
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+                pathsList.appendChild(pathElement);
+            });
+        }
+    </script>
+</body>
+</html>

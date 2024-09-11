@@ -1,0 +1,132 @@
+[
+    {
+      "model": "network_optimizer.node",
+      "pk": 1,
+      "fields": {
+        "name": "New York",
+        "location": "40.7128° N, 74.0060° W"
+      }
+    },
+    {
+      "model": "network_optimizer.node",
+      "pk": 2,
+      "fields": {
+        "name": "Los Angeles",
+        "location": "34.0522° N, 118.2437° W"
+      }
+    },
+    {
+      "model": "network_optimizer.node",
+      "pk": 3,
+      "fields": {
+        "name": "Chicago",
+        "location": "41.8781° N, 87.6298° W"
+      }
+    },
+    {
+      "model": "network_optimizer.node",
+      "pk": 4,
+      "fields": {
+        "name": "Houston",
+        "location": "29.7604° N, 95.3698° W"
+      }
+    },
+    {
+      "model": "network_optimizer.link",
+      "pk": 1,
+      "fields": {
+        "source": 1,
+        "destination": 3,
+        "distance": 1145.0,
+        "capacity": 100
+      }
+    },
+    {
+      "model": "network_optimizer.link",
+      "pk": 2,
+      "fields": {
+        "source": 1,
+        "destination": 4,
+        "distance": 2282.0,
+        "capacity": 100
+      }
+    },
+    {
+      "model": "network_optimizer.link",
+      "pk": 3,
+      "fields": {
+        "source": 2,
+        "destination": 4,
+        "distance": 2467.0,
+        "capacity": 100
+      }
+    },
+    {
+      "model": "network_optimizer.link",
+      "pk": 4,
+      "fields": {
+        "source": 3,
+        "destination": 2,
+        "distance": 2802.0,
+        "capacity": 100
+      }
+    },
+    {
+      "model": "network_optimizer.wavelength",
+      "pk": 1,
+      "fields": {
+        "name": "C-Band 1",
+        "frequency": 191.5
+      }
+    },
+    {
+      "model": "network_optimizer.wavelength",
+      "pk": 2,
+      "fields": {
+        "name": "C-Band 2",
+        "frequency": 192.0
+      }
+    },
+    {
+      "model": "network_optimizer.wavelength",
+      "pk": 3,
+      "fields": {
+        "name": "C-Band 3",
+        "frequency": 192.5
+      }
+    },
+    {
+      "model": "network_optimizer.path",
+      "pk": 1,
+      "fields": {
+        "source": 1,
+        "destination": 2,
+        "links": [1, 4],
+        "wavelength": 1,
+        "latency": 19.735
+      }
+    },
+    {
+      "model": "network_optimizer.path",
+      "pk": 2,
+      "fields": {
+        "source": 1,
+        "destination": 4,
+        "links": [2],
+        "wavelength": 2,
+        "latency": 11.41
+      }
+    },
+    {
+      "model": "network_optimizer.path",
+      "pk": 3,
+      "fields": {
+        "source": 2,
+        "destination": 3,
+        "links": [3, 2],
+        "wavelength": 3,
+        "latency": 23.745
+      }
+    }
+  ]
+  
